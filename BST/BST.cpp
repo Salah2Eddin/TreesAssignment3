@@ -1,9 +1,7 @@
 #include "BST.h"
 
 BST::~BST() {
-//    for (int i = 0; i < size; ++i) {
-//        delete nodes[i];
-//    }
+    delete root;
 }
 
 void BST::insert(Student student) {
@@ -29,37 +27,30 @@ void BST::insert(Student student) {
 }
 
 Node *BST::remove(Node *current, int id) {
-    if (current == nullptr) {
+    if (current == nullptr)
         return current;
+
+    if (current->lChild == nullptr && current->rChild == nullptr) {
+        if (current == root)
+            root = nullptr;
+        delete current;
+        current = nullptr;
     } else if (id < current->student.getId()) {
         current->lChild = remove(current->lChild, id);
     } else if (id > current->student.getId()) {
         current->rChild = remove(current->rChild, id);
     } else {
-        //Case 1: No Children
-        if (current->lChild == nullptr && current->rChild == nullptr) {
-            delete current;
-            current = nullptr;
-        }
-        //Case 2: One Child
-        else if (current->lChild == nullptr) {
-            Node *tmp = current;
-            current = current->rChild;
-            delete tmp;
-        }
-        else if (current->rChild == nullptr) {
-            Node *tmp = current;
-            current = current->lChild;
-            delete tmp;
-        }
-        //Case 3: Two Children
-        else {
-            Node *tmp = findMin(current->rChild);
+        Node *tmp;
+        if (current->lChild == nullptr) {
+            tmp = InorderSuccessor(current->rChild);
             current->student = tmp->student;
             current->rChild = remove(current->rChild, tmp->student.getId());
+        } else {
+            tmp = InorderPredecessor(current->lChild);
+            current->student = tmp->student;
+            current->lChild = remove(current->lChild, tmp->student.getId());
         }
     }
-    size--;
     return current;
 }
 
@@ -109,16 +100,23 @@ void BST::printNumStudentsDepartment(Node *current, std::map<std::string, int> &
         std::cout << pair.first << ' ' << pair.second << " Student(s)\n";
 }
 
-void BST::setRoot(Node *root) {
-    this->root = root;
+
+Node *BST::InorderSuccessor(Node *rSubTree) {
+    while (rSubTree && rSubTree->lChild != nullptr) {
+        rSubTree = rSubTree->lChild;
+    }
+    return rSubTree;
 }
 
-Node *BST::findMin(Node *rSubTree) {
-    Node *current = rSubTree;
-    while (current->lChild != nullptr) {
-        current = current->lChild;
+Node *BST::InorderPredecessor(Node *lSubTree) {
+    while (lSubTree && lSubTree->rChild != nullptr) {
+        lSubTree = lSubTree->rChild;
     }
-    return current;
+    return lSubTree;
+}
+
+void BST::decrementSize(int decrement) {
+    this->size = size - decrement;
 }
 
 
