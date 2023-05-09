@@ -10,6 +10,10 @@ struct Node {
     Node *rChild = nullptr;
     Student student;
     explicit Node(const Student& student) : student(student) {}
+    ~Node() {
+        delete lChild;
+        delete rChild;
+    }
 };
 
 class BST {
@@ -25,10 +29,11 @@ public:
     void getNumStudentsDepartment(Node *current, std::map<std::string, int> &departments);
     void printNumStudentsDepartment(Node *current, std::map<std::string, int> &departments);
     int getSize();
+    void decrementSize(int size);
     Node *getRoot();
-    void setRoot(Node *root);
 
-    Node *findMin(Node *pNode);
+    Node *InorderSuccessor(Node *pNode);
+    Node *InorderPredecessor(Node *rSubTree);
 };
 
 
