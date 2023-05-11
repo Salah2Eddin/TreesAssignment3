@@ -1,11 +1,9 @@
 #include "MinHeap.h"
 
-
-
 void MinHeap::addStudent(Student student) {
     students.push_back(student);
     int stSize = students.size();
-    for(int i = stSize / 2; i >= 0; --i){
+    for(int i = stSize / 2 - 1; i >= 0; --i){
         heapify(i,stSize);
     }
 }
@@ -19,8 +17,8 @@ void MinHeap::printAllStudents() {
 
 void MinHeap::heapify(int idx, int stSize) {
     int smallestChildIdx = idx;
-    int leftChildIdx = 2 * idx;
-    int rightChildIdx = 2 * idx + 1;
+    int leftChildIdx = 2 * idx + 1;
+    int rightChildIdx = 2 * idx + 2;
     if(leftChildIdx < stSize
         && students[leftChildIdx].compareByGpa(students[smallestChildIdx])){
         smallestChildIdx = leftChildIdx;

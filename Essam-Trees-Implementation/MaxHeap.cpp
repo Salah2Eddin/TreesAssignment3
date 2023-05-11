@@ -3,7 +3,7 @@
 void MaxHeap::addStudent(Student student) {
     students.push_back(student);
     int stSize = students.size();
-    for(int i = stSize / 2; i >= 0; --i){
+    for(int i = stSize / 2 - 1; i >= 0; --i){
         heapify(i,stSize);
     }
 }
@@ -17,8 +17,8 @@ void MaxHeap::printAllStudents() {
 
 void MaxHeap::heapify(int idx, int stSize) {
     int largestChildIdx = idx;
-    int leftChildIdx = 2 * idx;
-    int rightChildIdx = 2 * idx + 1;
+    int leftChildIdx = 2 * idx + 1;
+    int rightChildIdx = 2 * idx + 2;
     if(leftChildIdx < stSize
        && students[largestChildIdx].compareByGpa(students[leftChildIdx])){
         largestChildIdx = leftChildIdx;
