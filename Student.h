@@ -1,33 +1,33 @@
-#pragma once
+#ifndef DATASTRUCTURES_STUDENT_H
+#define DATASTRUCTURES_STUDENT_H
 
 #include <iostream>
-#include <string>
-
-
-static int StudentCount = 1;
 
 class Student {
 private:
     int id;
+    double gpa = 0;
     std::string name;
     std::string department;
-    double gpa = 0;
 public:
-    Student(std::string name, std::string department, double gpa) :
-            id(StudentCount++), name(std::move(name)), department(std::move(department)), gpa(gpa) {}
+    Student() = default;
 
-    bool compareByID(const Student &other) const {
-        return this->id < other.id;
-    }
+    Student(int id, std::string name, std::string department, double gpa);
 
-    bool compareByGpa(const Student &other) const {
-        return this->gpa < other.gpa;
-    }
+    bool compareByID(const Student &other) const;
+    bool compareByGpa(const Student &other) const;
+
+    int getId() const;
+
+    const std::string &getDepartment() const;
+
+    Student& operator=(const Student& otherStudent);
 
     friend std::ostream &operator<<(std::ostream &out, const Student &student);
+
+    friend std::istream &operator>>(std::istream &in, Student &student);
 };
 
-std::ostream &operator<<(std::ostream &out, const Student &student) {
-    out << "[" << student.id << ", " << student.name << ", " << student.gpa << ", " << student.department << ']';
-    return out;
-}
+
+
+#endif //DATASTRUCTURES_STUDENT_H

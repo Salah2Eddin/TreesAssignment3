@@ -5,9 +5,11 @@
 
 template<typename TK, typename TV>
 class AVL {
+    int count = 0;
+public:
     struct AVLNode {
-        TK key;
-        TV value;
+        TK key = 0;
+        TV value = NULL;
         AVL::AVLNode *left = nullptr, *right = nullptr;
         int height = 1;
 
@@ -27,19 +29,38 @@ class AVL {
     };
 
     AVLNode *root = nullptr;
-public:
     AVL() = default;
+
+    // get
+    TV get(TK key) {
+        return get(key, root);
+    }
+
+    TV get(TK key, AVLNode *curNode) {
+        if (curNode == nullptr)
+            throw std::exception();
+        else if (curNode->key > key) {
+            return get(key, curNode->left);
+        } else if (curNode->key < key) {
+            return get(key, curNode->right);
+        } else if (curNode->key == key) {
+            return curNode->value;
+        } else
+            throw std::exception();
+    }
+
 
     // insert
     void insert(TK key, TV value) {
         auto *newNode = new AVLNode(key, value);
         root = insert(root, newNode);
+        count++;
     }
 
     AVLNode *insert(AVLNode *curNode, AVLNode *newNode) {
         if (curNode == nullptr) {
             curNode = newNode;
-            return curNode;
+            return newNode;
         } else if (curNode->key > newNode->key) {
             curNode->left = insert(curNode->left, newNode);
         } else if (curNode->key < newNode->key) {
@@ -65,6 +86,7 @@ public:
 
     // delete
     void remove(TK key) {
+        count--;
         root = remove(root, key);
     }
 
@@ -120,8 +142,9 @@ public:
         if (curNode == nullptr)
             return;
         print(os, curNode->left);
-        os << curNode->value << " ";
+        os << curNode->value << "\n";
         print(os, curNode->right);
+
     }
 
     friend std::ostream &operator<<(std::ostream &os, AVL<TK, TV> &avl) {
@@ -190,5 +213,15 @@ public:
     AVLNode *shiftRightLeft(AVLNode *z) {
         z->right = shiftRight(z->right);
         return shiftLeft(z);
+    }
+
+    int getCount() const {
+        return count;
+    }
+
+    ~AVL() {
+        while (root != nullptr) {
+            remove(root->key);
+        }
     }
 };
